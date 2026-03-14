@@ -68,10 +68,10 @@ ENV PNPM_HOME=/data/pnpm
 ENV PNPM_STORE_DIR=/data/pnpm-store
 ENV PATH="/data/npm/bin:/data/pnpm:${PATH}"
 
-# Constrain Node heap so child processes (gateway, doctor) don't OOM on small
-# Railway instances.  256 MB leaves room for the OS + native allocations inside
-# a 512 MB container.  Users on larger plans can override via Railway variables.
-ENV NODE_OPTIONS="--max-old-space-size=256"
+# Raise Node heap limit so the gateway and doctor don't OOM.  Node defaults to
+# ~1.5 GB which can be insufficient for OpenClaw.  4 GB is safe on 8 GB plans;
+# override via the NODE_OPTIONS Railway variable for other instance sizes.
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 
 WORKDIR /app
 
