@@ -68,6 +68,11 @@ ENV PNPM_HOME=/data/pnpm
 ENV PNPM_STORE_DIR=/data/pnpm-store
 ENV PATH="/data/npm/bin:/data/pnpm:${PATH}"
 
+# Constrain Node heap so child processes (gateway, doctor) don't OOM on small
+# Railway instances.  256 MB leaves room for the OS + native allocations inside
+# a 512 MB container.  Users on larger plans can override via Railway variables.
+ENV NODE_OPTIONS="--max-old-space-size=256"
+
 WORKDIR /app
 
 # Wrapper deps
