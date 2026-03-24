@@ -22,7 +22,7 @@ WORKDIR /openclaw
 
 # Pin to a known-good ref (tag/branch). Override in Railway template settings if needed.
 # Using a released tag avoids build breakage when `main` temporarily references unpublished packages.
-ARG OPENCLAW_GIT_REF=v2026.3.13
+ARG OPENCLAW_GIT_REF=v2026.3.23
 RUN git clone --depth 1 --branch "${OPENCLAW_GIT_REF}" https://github.com/openclaw/openclaw.git .
 
 # Patch: relax version requirements for packages that may reference unpublished versions.
@@ -35,7 +35,7 @@ RUN set -eux; \
 
 RUN pnpm install --no-frozen-lockfile
 
-# Patch: fix TypeScript errors in v2026.3.13 browser modules that break DTS generation.
+# Patch: suppress potential TypeScript errors in browser modules that may break DTS generation.
 # pw-ai.ts imports a non-existent export; agent.act.ts has mismatched type signatures.
 RUN sed -i '1s/^/\/\/ @ts-nocheck\n/' src/browser/pw-ai.ts src/browser/routes/agent.act.ts
 
